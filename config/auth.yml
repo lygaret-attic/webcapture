@@ -1,0 +1,5 @@
+development:
+  realm: "WebCapture Dev"
+
+production:
+  realm: "WebCapture"

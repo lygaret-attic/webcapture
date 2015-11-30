@@ -1,0 +1,16 @@
+#:TITLE WebCapture
+* WebCapture
+** What?
+Org-mode capture templates from wherever.
+
+** Planning
+*** TODO implement capture template configuration
+- parse org-capture mode syntax
+*** TODO implement JWT token login (for limited scoped access)
+*** TODO implement bookmarklets / plugins
+- chrome/firefox/etc. extensions that could send text/reminders, etc.
+- server side handling for incoming email / sms
+
+** Copyright
+Copyright (C) 2016 Jon Raphaelson <jon@accidental.cc>
+This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
