@@ -1,4 +1,5 @@
 class User
+
   # Authentication related code for User
   module Authentication
     extend ActiveSupport::Concern
@@ -24,4 +25,5 @@ class User
       end
     end
   end
+
 end

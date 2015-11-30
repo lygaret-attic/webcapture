@@ -1,11 +1,8 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe User, type: :model do
-
   context "authentication" do
-    let(:user) {
-      create(:user, password: "secret")
-    }
+    let(:user) { create(:user, password: "secret") }
 
     context("User.authenticate") do
       it "can fail authentication for bad passwords" do

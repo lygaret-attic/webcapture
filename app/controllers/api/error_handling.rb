@@ -53,7 +53,7 @@ module API
 
     def render_request_user
       realm = Rails.configuration.x.auth["realm"]
-      headers['WWW-Authenticate'] = %(Basic realm="#{realm}", Token realm="#{realm}")
+      headers["WWW-Authenticate"] = %(Basic realm="#{realm}", Token realm="#{realm}")
       render_response(401, message: "Unauthorized")
     end
   end

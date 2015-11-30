@@ -1,6 +1,7 @@
 module API
   # API Controller for user and session management.
   class UsersController < BaseController
+
     # given an email and password, set up an authenticated session.
     def authenticate
       initiate_session User.authenticate!(cred_params[:email], cred_params[:password])
@@ -33,5 +34,6 @@ module API
     def update_params
       params.permit(:email, :password)
     end
+
   end
 end

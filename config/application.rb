@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require File.expand_path("../boot", __FILE__)
 
 require "rails"
 require "active_model/railtie"
@@ -12,10 +12,12 @@ Bundler.require(*Rails.groups)
 
 module Webcapture
   class Application < Rails::Application
+
     # setup application configuration
     config.x.auth = Rails.application.config_for(:auth)
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
   end
 end

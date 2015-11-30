@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe API::Authentication, type: :controller do
-
   controller(ActionController::Base) do
     include API::Authentication
 
@@ -27,8 +26,8 @@ describe API::Authentication, type: :controller do
 
   before do
     routes.draw do
-      get  ':controller/:action'
-      post ':controller/:action'
+      get ":controller/:action"
+      post ":controller/:action"
     end
   end
 
@@ -49,7 +48,7 @@ describe API::Authentication, type: :controller do
     end
 
     it "should allow authenticating a user" do
-      user = create(:user, password: 'secret')
+      user = create(:user, password: "secret")
       post :authenticate, uid: user.id
 
       expect(response).to have_http_status(201)
@@ -60,7 +59,7 @@ describe API::Authentication, type: :controller do
 
   context "authentication" do
     it "should allow authenticating via session" do
-      user = create(:user, password: 'secret')
+      user = create(:user, password: "secret")
       session[:user_id] = user.id
 
       # should be authenticated,
@@ -70,8 +69,8 @@ describe API::Authentication, type: :controller do
     end
 
     it "should allow authenticating via basic auth" do
-      user = create(:user, password: 'secret')
-      request.headers['Authorization'] = basic_auth(user.email, 'secret')
+      user = create(:user, password: "secret")
+      request.headers["Authorization"] = basic_auth(user.email, "secret")
 
       # should be authenticated
       # basic authentication gets all scopes by default

@@ -12,10 +12,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20151129062403) do
-
   create_table "users", force: :cascade do |t|
     t.string "email",    null: false
     t.string "passhash", null: false
   end
-
 end

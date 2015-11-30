@@ -1,7 +1,28 @@
-inherit_from: './.rubocop_todo.yml'
+# inherit_from: './.rubocop_todo.yml'
 
-Style/Encoding:
-    Enabled: false
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+    - 'Rakefile'
+    - 'Gemfile'
 
-Metrics/LineLength: 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines
+
+Style/Documentation:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Metrics/LineLength:
     Max: 120
