@@ -1,7 +1,10 @@
-#:TITLE WebCapture
 * WebCapture
 ** What?
 Org-mode capture templates from wherever.
+
+** Copyright
+Copyright (C) 2016 Jon Raphaelson <jon@accidental.cc>
+This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
 
 ** Planning
 *** TODO implement capture template configuration
@@ -11,6 +14,15 @@ Org-mode capture templates from wherever.
 - chrome/firefox/etc. extensions that could send text/reminders, etc.
 - server side handling for incoming email / sms
 
-** Copyright
-Copyright (C) 2016 Jon Raphaelson <jon@accidental.cc>
-This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
+** Notes
+The way this will end up working:
+
+- capture an item via bookmarklet, plugin or whatever (email, sms, bookmarks)
+- store that item in the database (encrypted would be nice)
+- have a uri that can be used to fetch an *org-mode formatted* file with your captures
+- elisp package to:
+  + fetch that file & cache it locally
+  + start refiling the entries elsewhere
+  + when an entry is refiled away, remove it from the list on the server?
+
+The idea is that there's this magical, auto-updating capture target in the sky, and whatever you would like to push to it you can, and then when you're at your workstation, you can pull down and refile your notes to your heart's content.
