@@ -1,5 +1,5 @@
-* WebCapture
-** What?
+#+TITLE: WebCapture
+
 Org-mode capture templates from wherever.
 
 ** Copyright
@@ -13,6 +13,14 @@ This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
 *** TODO implement bookmarklets / plugins
 - chrome/firefox/etc. extensions that could send text/reminders, etc.
 - server side handling for incoming email / sms
+
+** Examples
+*** [[http://usesthis.com/interviews/][UsesThis: famous people doing things]]
+    :PROPERTIES:
+    :WEBCAPTURE: ToxJZyEY26EtNt
+    :CREATED:  2015-12-01
+    :END:
+    The thing with the guy is pretty cool, you know?
 
 ** Notes
 The way this will end up working:

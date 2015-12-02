@@ -10,13 +10,14 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'unicorn'
 
 group :development, :test do
-  gem 'byebug', require: false
+  gem 'byebug'
   gem 'pry', require: false
+  gem 'rspec-rails', '~> 3.0'
+  gem 'forgery'
 end
 
 group :test do
   gem 'simplecov', require: false
-  gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails', '~> 4.0'
 end
 

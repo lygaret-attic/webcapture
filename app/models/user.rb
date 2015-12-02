@@ -1,8 +1,10 @@
 class User < ActiveRecord::Base
 
-  include ::User::Authentication
-
+  has_many :captures
   validates :email, presence: true
   validates :passhash, presence: true
+
+  # features
+  include ::User::Authentication
 
 end

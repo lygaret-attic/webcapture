@@ -11,9 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151129062403) do
+ActiveRecord::Schema.define(version: 20151202074450) do
+
+  create_table "captures", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "key",                    null: false
+    t.text     "content",                null: false
+    t.integer  "status",     default: 0
+  end
+
+  add_index "captures", ["user_id", "key"], name: "index_captures_on_user_id_and_key", unique: true
+  add_index "captures", ["user_id"], name: "index_captures_on_user_id"
+
+  create_table "templates", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "description", null: false
+    t.text     "template",    null: false
+    t.text     "json",        null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email",    null: false
     t.string "passhash", null: false
   end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+
 end
