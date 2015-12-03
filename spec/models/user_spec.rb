@@ -72,5 +72,17 @@ RSpec.describe User, type: :model do
       expect(user.captures.pending.count).to eq(2)
       expect(user.captures.merged.count).to eq(1)
     end
+
+    it "should cascade deletes" do
+      user = create(:user_with_captures, count: 5)
+      ids  = user.captures.pluck(:id)
+
+      # delete_all runs no callbacks
+      # this is testing for the database level cascading deletes
+      User.where(id: user.id).delete_all
+
+      count = Capture.where(id: ids).count
+      expect(count).to eq(0)
+    end
   end
 end

@@ -12,6 +12,7 @@ module API
       rescue_from ActionController::RoutingError,          with: :render_not_found
       rescue_from ActionController::ParameterMissing,      with: :render_bad_request
       rescue_from ActionController::UnpermittedParameters, with: :render_bad_request
+      rescue_from ActionController::UnknownFormat,         with: :render_unknown_format
 
       rescue_from ActiveRecord::RecordNotFound,            with: :render_not_found
       rescue_from ActiveRecord::RecordInvalid,             with: :render_validation_error
@@ -26,6 +27,7 @@ module API
       data = data.merge(id: request.uuid)
       respond_to do |format|
         format.html { render "errors/response.html.erb", status: status, locals: { data: data } }
+        format.org  { render "errors/response.org.erb", status: status, locals: { data: data } }
         format.json { render status: status, json: data }
       end
     end
@@ -41,6 +43,10 @@ module API
 
     def render_bad_request(e)
       render_response(400, message: "Invalid Request", detail: e.message)
+    end
+
+    def render_unknown_format(e)
+      render_response(406, message: "Unknown Format")
     end
 
     def render_validation_error(e)

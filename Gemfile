@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.5'
 gem 'jbuilder', '~> 2.0'
 
-gem 'sqlite3'
+gem 'pg'
 gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
@@ -26,4 +26,5 @@ group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
   gem 'fuubar'
+  gem 'immigrant'
 end

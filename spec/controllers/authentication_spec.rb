@@ -58,8 +58,9 @@ describe API::Authentication, type: :controller do
   end
 
   context "authentication" do
+    let(:user) { create(:user, password: "secret") }
+
     it "should allow authenticating via session" do
-      user = create(:user, password: "secret")
       session[:user_id] = user.id
 
       # should be authenticated,
@@ -69,8 +70,7 @@ describe API::Authentication, type: :controller do
     end
 
     it "should allow authenticating via basic auth" do
-      user = create(:user, password: "secret")
-      request.headers["Authorization"] = basic_auth(user.email, "secret")
+      basic_auth(user.email, "secret")
 
       # should be authenticated
       # basic authentication gets all scopes by default
@@ -91,24 +91,21 @@ describe API::Authentication, type: :controller do
     end
 
     it "should disallow if missing the named scope" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:not_special]
-
+      session_auth(user, [:not_special])
       bypass_rescue
+
       expect { get :scoped }.to raise_error(API::AccessDeniedError)
     end
 
     it "should allow if I have the named scope" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:not_special, :special]
+      session_auth(user, [:not_special, :special])
 
       get :scoped
       expect(response).to have_http_status(204)
     end
 
     it "should allow if I have the :any scope" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:any]
+      session_auth(user)
 
       get :scoped
       expect(response).to have_http_status(204)

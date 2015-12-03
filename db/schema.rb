@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151202074450) do
+ActiveRecord::Schema.define(version: 20151203065356) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "captures", force: :cascade do |t|
     t.integer  "user_id"
@@ -22,8 +25,8 @@ ActiveRecord::Schema.define(version: 20151202074450) do
     t.integer  "status",     default: 0
   end
 
-  add_index "captures", ["user_id", "key"], name: "index_captures_on_user_id_and_key", unique: true
-  add_index "captures", ["user_id"], name: "index_captures_on_user_id"
+  add_index "captures", ["user_id", "key"], name: "index_captures_on_user_id_and_key", unique: true, using: :btree
+  add_index "captures", ["user_id"], name: "index_captures_on_user_id", using: :btree
 
   create_table "templates", force: :cascade do |t|
     t.integer  "user_id"
@@ -39,6 +42,7 @@ ActiveRecord::Schema.define(version: 20151202074450) do
     t.string "passhash", null: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
+  add_foreign_key "captures", "users", name: "captures_user_id_fk", on_delete: :cascade
 end
