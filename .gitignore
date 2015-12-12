@@ -20,3 +20,6 @@ doc
 \#*
 .\#*
 .byebug_history
+/node_modules
+/public/bundle.js
+/public/bundle.js.map
