@@ -9,46 +9,74 @@ RSpec.describe API::CapturesController, type: :controller do
   context "authenticated" do
     before(:each) { session_auth(@user) }
 
-    it "#index.json gives the full list of pending captures by @user" do
-      get :index, format: :json
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to eq "application/json"
+    context "#index" do
+      it "#index.json gives the full list of pending captures by @user" do
+        get :index, format: :json
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq "application/json"
 
-      json = JSON.parse(response.body)
-      expect(json.length).to eq(5)
+        json = JSON.parse(response.body)
+        expect(json.length).to eq(5)
+      end
+
+      it "#index.org gives something in text/x-org" do
+        get :index, format: :org
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq "text/x-org"
+      end
+
+      it "#index.{other} gives 406" do
+        get :index, format: :html
+        expect(response).to have_http_status(406)
+      end
     end
 
-    it "#index.org gives something in text/x-org" do
-      get :index, format: :org
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to eq "text/x-org"
+    context "#show" do
+      let(:capture) { @user.captures.pending.first }
+
+      it "#show/{key}.json, gives a single capture" do
+        get :show, id: capture.key, format: :json
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq("application/json")
+
+        json = JSON.parse(response.body)
+        expect(json["key"]).to eq(capture.key)
+      end
+
+      it "#show/{key}.org, gives a single capture ind text/x-org" do
+        get :show, id: capture.key, format: :org
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq("text/x-org")
+      end
+
+      it "#show/{key}.{other}, gives 406" do
+        get :show, id: capture.key, format: :html
+        expect(response).to have_http_status(406)
+      end
     end
 
-    it "#index.{other} gives 406" do
-      get :index, format: :html
-      expect(response).to have_http_status(406)
-    end
+    context "#create" do
+      it "responds to json" do
+        post :create, capture: { content: "* Some Text" }, format: :json
 
-    let(:capture) { @user.captures.pending.first }
+        expect(response.status).to eq(201)
+        expect(response.content_type).to eq("application/json")
 
-    it "#show/{key}.json, gives a single capture" do
-      get :show, id: capture.key, format: :json
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to eq("application/json")
+        json = JSON.parse(response.body)
+        expect(json["key"]).to be_present
+        expect(json["content"]).to eq(["* Some Text",
+                                       "  :PROPERTIES:",
+                                       "  :webcapture: #{json["key"]}",
+                                       "  :END:"].join("\n"))
+      end
 
-      json = JSON.parse(response.body)
-      expect(json["key"]).to eq(capture.key)
-    end
+      it "responds to org" do
+        post :create, capture: { content: "* Some Text" }, format: :org
 
-    it "#show/{key}.org, gives a single capture ind text/x-org" do
-      get :show, id: capture.key, format: :org
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to eq("text/x-org")
-    end
-
-    it "#show/{key}.{other}, gives 406" do
-      get :show, id: capture.key, format: :html
-      expect(response).to have_http_status(406)
+        expect(response.status).to eq(201)
+        expect(response.content_type).to eq("text/x-org")
+        expect(response.body).to be_present
+      end
     end
   end
 
@@ -79,6 +107,20 @@ RSpec.describe API::CapturesController, type: :controller do
       get :show, id: "someid"
       expect(response).to have_http_status(:forbidden)
     end
-  end
 
+    it "#create" do
+      post :create
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "#update" do
+      patch :update, id: "someid"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "#update" do
+      delete :destroy, id: "someid"
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

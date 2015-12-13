@@ -5,7 +5,7 @@ Rails.application.routes.draw do
         post :authenticate
       end
 
-      resources :captures
+      resources :captures, except: [:new, :edit]
     end
   end
 end

@@ -10,7 +10,8 @@ module.exports = function captureSerivceProvider() {
     }
 
     CaptureService.prototype.post = function(content) {
-        return this.$http.post(this.endpoint + '/captures', {content});
+        var data = {capture: { content }};
+        return this.$http.post(this.endpoint + '/captures', data);
     };
 
     this.$get = ['$http', function($http) {

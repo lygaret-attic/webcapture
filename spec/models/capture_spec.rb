@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Capture, type: :model do
-
   context "key management" do
     it "should generate a random key on create" do
       c = create(:capture)
@@ -47,4 +46,59 @@ RSpec.describe Capture, type: :model do
     end
   end
 
+  context "org parsing" do
+    it "should add a properties drawer if one wasn't included" do
+      input  = "* Some Headline"
+      c      = create(:capture, content: input)
+
+      output = ["* Some Headline",
+                "  :PROPERTIES:",
+                "  :webcapture: #{c.key}",
+                "  :END:"].join("\n")
+      expect(c.content).to eq(output)
+    end
+
+    it "should only add the webcapture key if there was a drawer already" do
+      input = ["* Some Headline",
+               "  :PROPERTIES:",
+               "  :key: value",
+               "  :END:"].join("\n")
+      c = create(:capture, content: input)
+
+      output = ["* Some Headline",
+                "  :PROPERTIES:",
+                "  :webcapture: #{c.key}",
+                "  :key: value",
+                "  :END:"].join("\n")
+      expect(c.content).to eq(output)
+    end
+
+    it "should place the drawer in the correct location with respect to DEADLINE" do
+      input = ["* Some Headline",
+               "  DEADLINE: <2015-12-12>",
+               "  Some context about the headline above"].join("\n")
+      c = create(:capture, content: input)
+
+      output = ["* Some Headline",
+                "  DEADLINE: <2015-12-12>",
+                "  :PROPERTIES:",
+                "  :webcapture: #{c.key}",
+                "  :END:",
+                "  Some context about the headline above"].join("\n")
+      expect(c.content).to eq(output)
+    end
+
+    it "bug #1" do
+      input = ["* <2015-12-10> [[google.com/blah]]",
+               "  Balh blah blah"].join("\n")
+      c = create(:capture, content: input)
+
+      output = ["* <2015-12-10> [[google.com/blah]]",
+                "  :PROPERTIES:",
+                "  :webcapture: #{c.key}",
+                "  :END:",
+                "  Balh blah blah"].join("\n")
+      expect(c.content).to eq(output)
+    end
+  end
 end
