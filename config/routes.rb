@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       end
 
       resources :captures, except: [:new, :edit]
+      resources :templates, except: [:new, :edit]
     end
   end
 end

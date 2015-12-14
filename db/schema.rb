@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203065356) do
+ActiveRecord::Schema.define(version: 20151213050634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,12 +30,15 @@ ActiveRecord::Schema.define(version: 20151203065356) do
 
   create_table "templates", force: :cascade do |t|
     t.integer  "user_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "description", null: false
-    t.text     "template",    null: false
-    t.text     "json",        null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "key",        null: false
+    t.text     "template",   null: false
+    t.text     "properties"
   end
+
+  add_index "templates", ["user_id", "key"], name: "index_templates_on_user_id_and_key", unique: true, using: :btree
+  add_index "templates", ["user_id"], name: "index_templates_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string "email",    null: false
@@ -45,4 +48,5 @@ ActiveRecord::Schema.define(version: 20151203065356) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
   add_foreign_key "captures", "users", name: "captures_user_id_fk", on_delete: :cascade
+  add_foreign_key "templates", "users", name: "templates_user_id_fk", on_delete: :cascade
 end

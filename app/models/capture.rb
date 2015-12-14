@@ -1,24 +1,21 @@
 class Capture < ActiveRecord::Base
+  include KeyManagement::Model
 
   # foreign keys
   belongs_to :user
 
-  # random unique key
-  attr_readonly :key
-  before_save -> { self.key = generate_key }, if: :new_record?
+  # status is an enumerated value
+  enum status: { pending: 0, merged: 1 }
 
   # keep the org content useful
   before_save -> { self.content = process_org }
 
-  # status is an enumerated value
-  enum status: { pending: 0, merged: 1 }
+  # hide id from json
+  def as_json(options = nil)
+    super (options || {}).merge except: [:id, :user_id]
+  end
 
   private
-
-  def generate_key
-    # 32 bytes of base64 =~ (4/3 * 32) chars
-    SecureRandom.urlsafe_base64(32)[0, 32]
-  end
 
   def process_org
     # already have a webcapture property, set the value

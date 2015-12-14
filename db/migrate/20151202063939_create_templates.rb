@@ -4,9 +4,12 @@ class CreateTemplates < ActiveRecord::Migration
       t.belongs_to :user
       t.timestamps null: false
 
-      t.string :description, null: false, length: 512
+      t.string :key,         null: false, length: 32
       t.text   :template,    null: false
-      t.text   :json,        null: false
+      t.text   :properties
+
+      t.index :user_id
+      t.index [:user_id, :key], unique: true
     end
   end
 end

@@ -74,7 +74,7 @@ RSpec.describe User, type: :model do
     end
 
     it "should cascade deletes" do
-      user = create(:user_with_captures, count: 5)
+      user = create(:user_with_stuff, count: 5)
       ids  = user.captures.pluck(:id)
 
       # delete_all runs no callbacks
@@ -82,6 +82,27 @@ RSpec.describe User, type: :model do
       User.where(id: user.id).delete_all
 
       count = Capture.where(id: ids).count
+      expect(count).to eq(0)
+    end
+  end
+
+  context "template relationships" do
+    let(:user) { create(:user) }
+
+    it "should own a collection of templates" do
+      create_list(:template, 3, user: user)
+      expect(user.templates.count).to eq(3)
+    end
+
+    it "should cascade deletes" do
+      user = create(:user_with_stuff, count: 5)
+      ids  = user.templates.pluck(:id)
+
+      # delete_all runs no callbacks
+      # this is testing for the database level cascading deletes
+      User.where(id: user.id).delete_all
+
+      count = Template.where(id: ids).count
       expect(count).to eq(0)
     end
   end

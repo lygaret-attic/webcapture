@@ -46,6 +46,20 @@ RSpec.describe Capture, type: :model do
     end
   end
 
+  context "as_json output" do
+    it "should not include id" do
+      c = create(:capture)
+      json = c.as_json
+      expect(json.keys).not_to include(:id)
+    end
+
+    it "should not include user_id" do
+      c = create(:capture)
+      json = c.as_json
+      expect(json.keys).not_to include(:user_id)
+    end
+  end
+
   context "org parsing" do
     it "should add a properties drawer if one wasn't included" do
       input  = "* Some Headline"

@@ -4,11 +4,22 @@ module API
     before_filter -> { require_scope! :capture }
 
     def index
-      @captures = current_user.captures.pending.order created_at: :asc
+      @captures = index_filter.order created_at: :asc
       respond_to { |format|
         format.org  { render body: @captures.pluck(:content).join("\n\n") }
         format.json { render json: @captures }
       }
+    end
+
+    def index_filter
+      case params[:status]
+      when "merged"
+        current_user.captures.merged
+      when "all"
+        current_user.captures
+      else
+        current_user.captures.pending
+      end
     end
 
     def show
@@ -30,26 +41,10 @@ module API
       }
     end
 
-    def update
-      update_params = params.require(:capture).permit(:content, :status)
-
-      @capture = current_user.captures.find_by! key params[:key]
-      @capture.update! update_params
-
-      respond_to { |format|
-        format.org  { render status: 200, body: @capture.content }
-        format.json { render status: 200, json: @capture.to_json }
-      }
-    end
-
     def destroy
-      @capture = current_user.captures.find_by! key: params[:key]
-
-      if params[:destroy]
-        @capture.update! status: :merged
-      else
-        @capture.destroy!
-      end
+      @capture = current_user.captures.find_by! key: params[:id]
+      @capture.update! status: :merged unless params[:force]
+      @capture.destroy! if params[:force]
 
       head status: 200
     end
