@@ -2,6 +2,33 @@
 
 Org-mode capture templates from wherever.
 
+** Running
+*** Prerequisites
+- ruby/bundler (developed and tested against ruby-2.2.0)
+- node/npm     (developed and tested against npm-3.4.1)
+
+*** Setup (API)
+1. ~$ bundle install~
+   - this can fail if you don't have postgres installed, try removing ~pg~ from the Gemfile, and edit ~config/database.yml~ to be sqlite, or whatever.
+1. Edit config/database.yml to your liking
+1. ~$ rake db:create~
+1. ~$ rake db:schema:load~
+1. Add a user and some templates (through console for now)
+  - ~$ rails c~
+  - ~> me = User.create! email: <your email>, password: <your password>~
+  - ~> me.templates.create! template: * "%a\n  %u %?", properties: {description: 'Bookmark Entry', hotkey: 'b'}~
+  - etc.
+
+*** Setup (Frontend)
+1. ~$ npm install~
+2. ~$ webpack~
+
+*** Dev Servers
+1. ~$ rails s~
+1. ~$ webpack-dev-server~
+
+Browse the site at [[http://localhost:3001]]
+
 ** Copyright
 Copyright (C) 2016 Jon Raphaelson <jon@accidental.cc>
 This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
