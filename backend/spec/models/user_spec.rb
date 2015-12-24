@@ -74,6 +74,8 @@ RSpec.describe User, type: :model do
     end
 
     it "should cascade deletes" do
+      pending "won't work with sqlite3. todo: tag tests with production mode tests"
+
       user = create(:user_with_stuff, count: 5)
       ids  = user.captures.pluck(:id)
 
@@ -95,6 +97,8 @@ RSpec.describe User, type: :model do
     end
 
     it "should cascade deletes" do
+      pending "won't work with sqlite3, todot: tag tests with production mode tests"
+
       user = create(:user_with_stuff, count: 5)
       ids  = user.templates.pluck(:id)
 

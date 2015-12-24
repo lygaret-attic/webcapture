@@ -5,23 +5,21 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: postgresql
+  adapter: sqlite3
   encoding: unicode
   pool: 5
-  username: jonathan
-  password: postgres
 
 development:
   <<: *default
-  database: webcapture_dev
+  database: db/webcapture_dev.sqlite
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: webcapture_test
+  database: db/webcapture_test.sqlite
 
 production:
   <<: *default
-  database: webcapture_prod
+  database: db/webcapture_prod.sqlite

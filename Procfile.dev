@@ -1,0 +1,2 @@
+backend: cd ./backend && rails s -p $PORT
+main-ui: cd ./main.ui && node server.js
