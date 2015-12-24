@@ -8,18 +8,19 @@
 /.bundle
 
 # Ignore the default SQLite database.
-/db/*.sqlite3
-/db/*.sqlite3-journal
+/backend/db/*.sqlite
+/backend/db/*.sqlite-journal
+/backend/db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log
-/tmp
+log
+tmp
 coverage
 doc
 
 \#*
 .\#*
 .byebug_history
-/node_modules
-/public/bundle.js
-/public/bundle.js.map
+node_modules
+public/bundle.js
+public/bundle.js.map
