@@ -1,5 +1,11 @@
 <!doctype html>
-<div id="root">
-  <div capture-template></div>
+<style>[ng-cloak] { display: none !important; }</style>
+<div id="container" hotkey-listener ng-cloak>
+  <div class="widget" ui-view="widget">
+  </div>
+  <ol class="help">
+    <li ui-view="help"></li>
+    <li><a ui-sref="settings">Visit Settings</a></li>
+  </div>
 </div>
 <script src="/bundle.js"></script>

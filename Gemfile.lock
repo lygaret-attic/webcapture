@@ -68,6 +68,7 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     json (1.8.3)
+    jwt (1.5.2)
     kgio (2.10.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -163,6 +164,10 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tins (1.6.0)
+    twilio-ruby (4.8.0)
+      builder (>= 2.1.2)
+      jwt (~> 1.0)
+      multi_json (>= 1.3.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     unicorn (5.0.1)
@@ -193,6 +198,7 @@ DEPENDENCIES
   rubocop
   simplecov
   spring
+  twilio-ruby
   unicorn
   web-console (~> 2.0)
 

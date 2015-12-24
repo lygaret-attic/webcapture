@@ -1,0 +1,20 @@
+<ol class="menu">
+  <li class="menu-item" ng-repeat="template in templates track by template.key">
+    <span class="hotkey" ng-if="template.properties.hotkey">
+      <a ui-sref="capture({ key: template.key })">[{{ template.properties.hotkey }}]</a> -
+    </span>
+    <span ng-if="!template.properties.hotkey" class="hotkey hotkey--muted">[ ] -</span>
+    {{ template.properties.description }}
+  </li>
+  <li class="menu-separator" ng-if="templates.length > 0"></li>
+  <li class="menu-item">
+    <span class="hotkey hotkey--muted">[C] -</span>
+    <a ui-sref="templates.add">Customize Templates</a>
+  </li>
+  <li class="menu-item">
+    <span class="hotkey hotkey--muted">[q] -</span>
+    <a ui-sref="templates.add">abort</a>
+  </li>
+</ol>
+<div class="help">
+</div>

@@ -1,0 +1,28 @@
+[template-picker] {
+  .menu {
+    list-style: none;
+    padding   : 0;
+
+    > .menu-separator {
+      border-top: 1px dashed #ccc;
+      margin-bottom: 0.625em;
+      margin-top: 1em;
+    }
+
+    > .menu-item {
+      margin-bottom: 10px;
+
+      a {
+        text-decoration: none;
+
+        &, &:visited {
+          color: #15e;
+        }
+      }
+
+      .hotkey.hotkey--muted {
+        color: #aaa;
+      }
+    }
+  }
+}

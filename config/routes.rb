@@ -5,8 +5,10 @@ Rails.application.routes.draw do
         post :authenticate
       end
 
-      resources :captures, except: [:new, :edit]
       resources :templates, except: [:new, :edit]
+      resources :captures, except: [:new, :edit] do
+        post :twilio_hook, on: :collection
+      end
     end
   end
 end

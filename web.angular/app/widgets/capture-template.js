@@ -48,13 +48,16 @@ module.exports = ['$timeout', '$sce', function($timeout, $sce, capture) {
     return {
         restrict: 'A',
         template: require("./capture-template.html"),
+        scope: {
+            template: '=template'
+        },
 
         controller: ['$scope', '$element', 'captureService', function($scope, $el, $$capture) {
             var context = {
                 annotation: "google.com/blah"
             };
 
-            $scope.template = parseTemplate("* %t %a\n  %i\n  %?", context);
+            $scope.template = parseTemplate($scope.template.template, context);
             $scope.doCreate = function() {
                 var editor = $el[0].querySelector('.editor');
                 $$capture.post(editor.innerText)
