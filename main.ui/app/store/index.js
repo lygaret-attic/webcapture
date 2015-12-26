@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 
 import counter from './counter';
 import routing from './routing';
+import meta    from './meta';
+import user    from './user';
 
 const hasDevtools = !!(window && window.devToolsExtension);
 
@@ -14,7 +16,9 @@ export default function createStore(state) {
 
     const reducers = combineReducers({
         routing,
-        counter
+        counter,
+        user,
+        meta
     });
 
     return finalCreateStore(reducers, state);
