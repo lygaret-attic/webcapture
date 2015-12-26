@@ -21,7 +21,7 @@ if (isProduction) {
     app.use(express.static(config.output.path));
 
     // history fallback
-    app.get('*', function response(req, res) {
+    app.get('/([^.]+)', function response(req, res) {
         res.sendFile(path.join(config.output.path, 'index.html'));
     });
 }
@@ -45,7 +45,7 @@ else {
 
     app.use(middleware);
     app.use(webpackHotMiddleware(compiler));
-    app.get('*', function response(req, res) {
+    app.get('/([^.]+)', function response(req, res) {
         res.write(middleware.fileSystem.readFileSync(path.join(config.output.path, 'index.html')));
         res.end();
     });

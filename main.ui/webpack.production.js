@@ -1,4 +1,3 @@
-
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -11,34 +10,31 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: '[name]-[hash].js',
+        filename: '[name].js?[hash]',
         publicPath: '/'
     },
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
+        new ExtractTextPlugin('[name].css?[hash]', { allChunks: true }),
         new HtmlWebpackPlugin({
-            template: 'app/index.tpl.html',
+            template: 'app/index.html',
             inject  : 'body',
             filename: 'index.html'
         }),
-        new ExtractTextPlugin('[name]-[hash].min.css'),
         new webpack.optimize.UglifyJsPlugin({
             compressor: {
                 warnings: false,
                 screw_ie8: true
             }
         }),
-        new StatsPlugin('webpack.stats.json', {
-            source: false,
-            modules: false
-        }),
+        new StatsPlugin('webpack.stats.json'),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         })
     ],
     module: {
         loaders: [{
-            test: /\.js$/,
+            test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel'
         }, {

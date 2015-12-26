@@ -8,6 +8,7 @@ export default class Hello extends React.Component {
     }
 
     incrementCount(event) {
+        console.log('blah');
         this.setState({ count: this.state.count + 1 });
     }
 

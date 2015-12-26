@@ -4,23 +4,26 @@ import * as counter from './store/counter';
 
 class App extends React.Component {
 
-    render() {
-        const {dispatch, count} = this.props;
-        debugger;
+    incrementCount(dispatch, event) {
+        const action = counter.increment(1);
+        dispatch(action);
+    }
 
+    render() {
+        const {dispatch, counter} = this.props;
         return (
-            <h1 onClick={() => dispatch(counter.increment(1))}>
-              Click to Increment: {count}
+            <h1 onClick={this.incrementCount.bind(this, dispatch)}>
+              Click to Increment: {counter.count}
             </h1>
         );
     }
 
 }
 
-function select(state) {
+function subbedState(state) {
     return {
-        count: state.counter
+        counter: state.counter
     };
 }
 
-export default connect(select)(App);
+export default connect(subbedState)(App);

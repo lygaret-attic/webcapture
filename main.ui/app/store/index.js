@@ -1,10 +1,21 @@
-import { createStore as _cs, combineReducers } from 'redux';
-import counter from './counter';
+import { createStore as _cs, combineReducers, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
-const reducers = combineReducers({
-    counter
-});
+import counter from './counter';
+import routing from './routing';
+
+const hasDevtools = !!(window && window.devToolsExtension);
 
 export default function createStore(state) {
-    return _cs(reducers, state);
+    const finalCreateStore = compose(
+        applyMiddleware(thunk),
+        hasDevtools ? window.devToolsExtension() : f => f
+    )(_cs);
+
+    const reducers = combineReducers({
+        routing,
+        counter
+    });
+
+    return finalCreateStore(reducers, state);
 }
