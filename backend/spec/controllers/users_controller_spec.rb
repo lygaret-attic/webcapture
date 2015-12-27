@@ -5,26 +5,43 @@ RSpec.describe API::UsersController, type: :controller do
     create(:user, password: "secret")
   end
 
-  describe "POST #authenticate" do
-    it "can authenticate a session" do
-      post :authenticate, email: user.email, password: "secret"
-      expect(response).to have_http_status(204)
-      expect(session[:user_id]).to eq(user.id)
-    end
-
-    it "fails with :unauthenticated" do
-      post :authenticate, email: "fake@fake.com", password: "secret"
+  describe "POST #token" do
+    it "requires authentication" do
+      post :token
       expect(response).to have_http_status(:unauthorized)
     end
 
-    it "requires password" do
-      post :authenticate, email: "fake@fake.com"
-      expect(response).to have_http_status(401)
+    it "requires the :account scope" do
+      session_auth(user, [:just_something])
+
+      post :token
+      expect(response).to have_http_status(:forbidden)
     end
 
-    it "requires email" do
-      post :authenticate, password: "secret"
-      expect(response).to have_http_status(401)
+    it "requires an explicit scopes parameter" do
+      session_auth(user)
+
+      post :token
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "requires an array for the scopes parameter" do
+      session_auth(user)
+
+      post :token, scopes: 4
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "generates a valid jwt token" do
+      session_auth(user)
+
+      post :token, scopes: [:special]
+      expect(response).to have_http_status(:created)
+
+      token = AuthenticationHelpers.jwt_decode(response.body)
+      expect(token).to be_truthy
+      expect(token["user_id"]).to eq(user.id)
+      expect(token["scopes"]).to contain_exactly("special")
     end
   end
 
@@ -35,16 +52,14 @@ RSpec.describe API::UsersController, type: :controller do
     end
 
     it "requires the :account scope" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:just_something]
+      session_auth(user, [:just_something])
 
       get :show
       expect(response).to have_http_status(:forbidden)
     end
 
     it "return success when authenticated" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:any]
+      session_auth(user)
 
       get :show
       expect(response).to have_http_status(:success)
@@ -58,19 +73,14 @@ RSpec.describe API::UsersController, type: :controller do
     end
 
     it "requires the account scope" do
-      session[:user_id] = user.id
-      session[:scopes]  = [:different]
+      session_auth(user, [:different])
 
       put :update, email: "fake@fake.com", password: "secret"
       expect(response).to have_http_status(:forbidden)
     end
 
     context "parameters" do
-      # login
-      before do
-        session[:user_id] = user.id
-        session[:scopes]  = [:any]
-      end
+      before { session_auth(user) }
 
       it "allows email" do
         expect { put :update, email: "new@email.com" }

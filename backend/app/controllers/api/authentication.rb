@@ -12,13 +12,13 @@ module API
       helper_method :current_user
     end
 
-    def current_user
-      parse_request_auth unless @current_user.present?
+    def current_user(options = nil)
+      parse_request_auth(options) unless @current_user.present?
       @current_user
     end
 
-    def current_scopes
-      parse_request_auth unless @current_scopes.present?
+    def current_scopes(options = nil)
+      parse_request_auth(options) unless @current_scopes.present?
       @current_scopes
     end
 
@@ -27,20 +27,22 @@ module API
       parse_from_session
     end
 
-    def require_user!
-      fail API::UnauthorizedError, "Unauthorized" unless current_user
+    def require_user!(options = nil)
+      fail API::UnauthorizedError, "Unauthorized" unless current_user(options)
     end
 
-    def require_scope!(scope)
-      require_user!
+    def require_scope!(scope, options = nil)
+      require_user!(options)
       fail API::AccessDeniedError, scope unless
         current_scopes && (current_scopes.include?(scope) || current_scopes.include?(:any))
     end
 
     private
 
-    def parse_request_auth
-      parse_from_session || parse_from_basicauth || parse_from_token
+    def parse_request_auth(options)
+      options ||= {}
+      auth      = parse_from_session || parse_from_basicauth
+      auth    ||= parse_from_token unless options[:basic]
     end
 
     def parse_from_session
@@ -61,9 +63,14 @@ module API
       end
     end
 
-    # TODO: implement JWT authentication
     def parse_from_token
-      false
+      authenticate_with_http_token do |token, _|
+        token = AuthenticationHelpers.jwt_decode(token)
+        return false unless token
+
+        @current_user   = User.find_by_id(token["user_id"])
+        @current_scopes = token["scopes"].map(&:to_sym)
+      end
     end
   end
 end

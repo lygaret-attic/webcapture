@@ -80,8 +80,14 @@ describe API::Authentication, type: :controller do
       expect(session.keys).to be_empty
     end
 
-    xit "should allow authenticating via token" do
-      pending "need to implement token auth"
+    it "should allow authenticating via token" do
+      jwt_auth(user, [:any])
+
+      # should be authenticated
+      # no session generated for token user
+      get :scoped
+      expect(response).to have_http_status(204)
+      expect(session.keys).to be_empty
     end
   end
 

@@ -11,6 +11,15 @@ module APISpecHelpers
       creds = ActionController::HttpAuthentication::Basic.encode_credentials email, password
       request.headers["Authorization"] = creds
     end
+
+    # The next request passes along a valid JWT token for the given user.
+    def jwt_auth(user, scopes = [:any], payload = {})
+      payload[:user_id] = user.is_a?(User) ? user.id : user_id
+      payload[:scopes]  = scopes.clone
+
+      creds = AuthenticationHelpers.jwt_encode(payload)
+      request.headers["Authorization"] = "Token #{creds}"
+    end
   end
 end
 

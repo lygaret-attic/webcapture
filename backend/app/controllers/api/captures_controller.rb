@@ -1,7 +1,7 @@
 module API
   class CapturesController < API::BaseController
 
-    before_filter -> { require_scope! :capture }, except: [:twilio_hook]
+    before_filter -> { require_scope! :capture }
 
     def index
       @captures = index_filter.order created_at: :asc
@@ -47,13 +47,6 @@ module API
       @capture.destroy! if params[:force]
 
       head status: 200
-    end
-
-    def twilio_hook
-      twilio_params = params.permit(:From, :Body)
-      User.first.captures.create! content: "* SMS [#{DateTime.now.utc}]\n  #{twilio_params["Body"]}]"
-
-      render plain: 'Got it.'
     end
 
   end

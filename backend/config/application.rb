@@ -19,8 +19,5 @@ module Webcapture
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
-    # Authenticate Twilio Webhooks
-    auth_token = Rails.application.secrets.twilio_auth_token
-    config.middleware.use Rack::TwilioWebhookAuthentication, auth_token, /twilio-hook/
   end
 end

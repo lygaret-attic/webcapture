@@ -2,12 +2,14 @@ module API
   # API Controller for user and session management.
   class UsersController < BaseController
 
-    # given an email and password, set up an authenticated session.
-    def authenticate
-      initiate_session User.authenticate!(cred_params[:email], cred_params[:password])
-      head status: 204
-    rescue ActiveRecord::RecordNotFound
-      raise API::UnauthorizedError, "Invalid username or password"
+    # given basic auth, return a valid authentication token and the user
+    def token
+      require_scope! :account, basic: true
+      scopes  = parse_scopes! params.require(:scopes)
+
+      payload = { user_id: current_user.id, scopes: scopes }
+      token   = AuthenticationHelpers.jwt_encode(payload)
+      render status: 201, text: token
     end
 
     # display the current user
@@ -27,8 +29,12 @@ module API
 
     private
 
-    def cred_params
-      params.permit(:email, :password)
+    def parse_scopes!(incoming)
+      unless incoming.present? && incoming.is_a?(Array)
+        fail API::InvalidRequestError, "scopes is not present or not array"
+      end
+
+      incoming.flatten.map(&:to_s).map(&:to_sym)
     end
 
     def update_params
