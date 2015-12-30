@@ -18,6 +18,7 @@ module.exports = {
     },
     resolve: {
         alias: {
+            'app'      : path.resolve(__dirname, 'app'),
             'react/lib': path.resolve(nodeModulesPath, 'react/lib'),
             'react'    : reactMinPath
         }

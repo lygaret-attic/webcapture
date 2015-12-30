@@ -4,6 +4,8 @@ module API
 
     # given basic auth, return a valid authentication token and the user
     def token
+      byebug
+
       require_scope! :account, basic: true
       scopes  = parse_scopes! params.require(:scopes)
 

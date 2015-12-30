@@ -8,7 +8,7 @@ import user    from './user';
 
 const hasDevtools = !!(window && window.devToolsExtension);
 
-export default function createStore(state) {
+export function createStore(state) {
     const finalCreateStore = compose(
         applyMiddleware(thunk),
         hasDevtools ? window.devToolsExtension() : f => f
@@ -23,3 +23,6 @@ export default function createStore(state) {
 
     return finalCreateStore(reducers, state);
 }
+
+const store = createStore({});
+export default store;
