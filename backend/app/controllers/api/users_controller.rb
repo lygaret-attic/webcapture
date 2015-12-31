@@ -4,14 +4,12 @@ module API
 
     # given basic auth, return a valid authentication token and the user
     def token
-      byebug
-
       require_scope! :account, basic: true
       scopes  = parse_scopes! params.require(:scopes)
 
       payload = { user_id: current_user.id, scopes: scopes }
       token   = AuthenticationHelpers.jwt_encode(payload)
-      render status: 201, text: token
+      render status: 201, json: { token: token }
     end
 
     # display the current user

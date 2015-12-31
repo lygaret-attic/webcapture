@@ -1,49 +1,40 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { Router, Route } from 'react-router';
-import { syncReduxAndRouter } from 'redux-simple-router';
+import _       from 'lodash';
+import angular from 'angular';
+import 'angular-ui-router';
 
-import "./index.scss";
+const app = angular.module('webcapture', ['ui.router']);
+export default app;
 
-import history     from './history';
-import store       from './services/store';
-import { network } from './services/network';
+// install services
 
-import Login     from './ui/login.jsx';
-import Dashboard from './ui/dashboard.jsx';
+import error from './services/error';
+error(app);
 
-boot();
+import token from './services/token';
+token(app);
 
-function boot() {
-    syncReduxAndRouter(history, store);
+import auth from './services/auth';
+auth(app);
 
-    const requireAuth = (nextState, replaceState, cb) =>
-              network(store, '/api/v1/user.json')
-              .then((resp) => {
-                  if (!resp.ok) { throw resp; }
-                  cb();
-              })
-              .catch((resp) => {
-                  replaceState({ nextPathname: nextState.location.pathname }, "/login");
-                  cb();
-              });
+import http from './services/http';
+http(app);
 
-    const root    = React.render(
-        <Provider store={store}>
-          <Router history={history}>
-            <Route path="/"      component={Dashboard} onEnter={requireAuth} />
-            <Route path="/login" component={Login} />
-          </Router>
-        </Provider>,
-        document.getElementById("root")
-    );
+// router controller
 
-    if (module.hot) {
-        let injection = require('react-hot-loader/Injection').RootInstanceProvider;
-        injection.injectProvider({
-            getRootInstances: function() {
-                return [root];
-            }
-        });
-    }
-}
+import root from './states/root';
+root(app);
+
+// configure routing and login-fallback
+
+import {addRoutes as loginRoutes} from './states/login';
+import {addRoutes as captureRoutes} from './states/capture';
+
+app.config(['$stateProvider', '$urlRouterProvider', ($stateP ,  $urlRouterP) => {
+    $urlRouterP.otherwise('/');
+
+    // login has no url (only accessible through auth failure)
+    loginRoutes($stateP, { name: 'login' });
+    captureRoutes($stateP, { name: 'capture', root: '' });
+
+    console.log($stateP);
+}]);
