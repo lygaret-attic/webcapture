@@ -1,35 +1,43 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, Route } from 'react-router';
-import { createHistory } from 'history';
-import { syncReduxAndRouter } from 'redux-simple-router';
-import createStore from './store';
+import _       from 'lodash';
+import angular from 'angular';
+import 'angular-ui-router';
 
-require("./index.scss");
+const app = angular.module('webcapture', ['ui.router']);
+export default app;
 
-const store   = createStore({});
-const history = createHistory();
-syncReduxAndRouter(history, store);
+// install services
 
-import Login from './ui/login.jsx';
-import Dashboard from './ui/dashboard.jsx';
+import error from './services/error';
+error(app);
 
-const root  = ReactDOM.render(
-    <Provider store={store}>
-      <Router history={history}>
-        <Route path="/login" component={Login} />
-        <Route path="/" component={Dashboard} />
-      </Router>
-    </Provider>,
-    document.getElementById("root")
-);
+import token from './services/token';
+token(app);
 
-if (module.hot) {
-    let injection = require('react-hot-loader/Injection').RootInstanceProvider;
-    injection.injectProvider({
-        getRootInstances: function() {
-            return [root];
-        }
-    });
-}
+import auth from './services/auth';
+auth(app);
+
+import http from './services/http';
+http(app);
+
+import templates from './services/templates';
+templates(app);
+
+// router controller
+
+import root from './states/root';
+root(app);
+
+// configure routing and login-fallback
+
+import {addRoutes as loginRoutes} from './states/login';
+import {addRoutes as captureRoutes} from './states/capture';
+
+app.config(['$stateProvider', '$urlRouterProvider', ($stateP ,  $urlRouterP) => {
+    $urlRouterP.otherwise('/');
+
+    // login has no url (only accessible through auth failure)
+    loginRoutes($stateP, { name: 'login' });
+    captureRoutes($stateP, { name: 'capture', root: '' });
+
+    console.log($stateP);
+}]);

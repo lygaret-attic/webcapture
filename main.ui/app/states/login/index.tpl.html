@@ -1,0 +1,12 @@
+<h1>Login!</h1>
+
+<form ng-submit="login.login(email, password)">
+  <div class="error" ng-if="login.error">
+    Incorrect email or password.
+  </div>
+  <input type="email" ng-model="email" required />
+  <br />
+  <input type="password" ng-model="password" required />
+  <br />
+  <button type="submit">Login</button>
+</form>

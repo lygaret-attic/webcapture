@@ -1,0 +1,10 @@
+<ul>
+  <li ng-repeat="template in vm.items track by template.key">
+    <a ui-sref="capture.capture({ template: template.key })">
+      {{ template.properties.description }}
+    </a>
+    <a ui-sref="capture.capture.edit({ template: template.key })">edit</a>
+    <a ng-click="vm.remove(template.key)">remove</a>
+  </li>
+  <li><a ui-sref="capture.create">Create New</a></li>
+</ul>

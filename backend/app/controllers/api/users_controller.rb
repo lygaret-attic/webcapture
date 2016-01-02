@@ -9,7 +9,7 @@ module API
 
       payload = { user_id: current_user.id, scopes: scopes }
       token   = AuthenticationHelpers.jwt_encode(payload)
-      render status: 201, text: token
+      render status: 201, json: { token: token }
     end
 
     # display the current user
