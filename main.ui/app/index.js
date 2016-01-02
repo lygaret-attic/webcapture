@@ -19,6 +19,9 @@ auth(app);
 import http from './services/http';
 http(app);
 
+import templates from './services/templates';
+templates(app);
+
 // router controller
 
 import root from './states/root';

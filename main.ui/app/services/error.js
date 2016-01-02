@@ -23,6 +23,8 @@ const errorTransition = _.debounce(($state, $params, ex) => {
 
 const handlerFactory = ['$log', '$injector', ($log, $injector) => {
     return (ex, cause) => {
+        $log.error(ex, cause);
+
         const $root = $injector.get('$rootScope');
         $root.$applyAsync(() => {
             const $state = $injector.get('$state');
