@@ -6,4 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-User.create!(email: "demo@example.com", password: "supersecret")
+if Rails.env.development?
+  user = User.create!(email: "demo@example.com", password: "password")
+  user.templates.create!(template: "* TODO %?", properties: { description: "Todo Entry" })
+end
