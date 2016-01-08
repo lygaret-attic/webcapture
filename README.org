@@ -33,6 +33,7 @@ This program is released under the terms of the [[LICENSE.txt][GPLv3 license]].
 
 ** Planning
 *** DONE implement JWT token login (for limited scoped access)
+*** TODO add expiration to the login tokens
 *** TODO implement capture template configuration
 - parse org-capture mode syntax
 *** TODO implement bookmarklets / plugins

@@ -13,7 +13,8 @@ module API
     def show
       @template = current_user.templates.find_by! key: params[:id]
       respond_to { |format|
-        format.json { render json: @template.to_json }
+        format.json { render json: @template }
+        format.frag { render body: @template.tokenized.to_json }
       }
     end
 
@@ -27,7 +28,8 @@ module API
       @template.save!
 
       respond_to { |format|
-        format.json { render status: 201, json: @template.to_json }
+        format.json { render status: 201, json: @template }
+        format.xml  { render status: 201, xml: @template }
       }
     end
 
@@ -51,7 +53,8 @@ module API
       @template.save!
 
       respond_to { |format|
-        format.json { render json: @template.to_json }
+        format.json { render json: @template }
+        format.xml  { render xml: @template }
       }
     end
 

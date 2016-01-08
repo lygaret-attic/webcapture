@@ -24,16 +24,21 @@ module API
 
     def render_response(status, data)
       fail ArgumentError "Must include a :message key!" unless data.key?(:message)
+
       data = data.merge(id: request.uuid)
       respond_to do |format|
         format.html { render "errors/response.html.erb", status: status, locals: { data: data } }
         format.org  { render "errors/response.org.erb", status: status, locals: { data: data } }
         format.json { render status: status, json: data }
+        format.xml  { render status: status, xml: data }
       end
     end
 
     def render_error(e)
-      Rails.logger.fatal(e)
+      trace = Rails.backtrace_cleaner.clean(e.backtrace).join("\n")
+      Rails.logger.fatal("Exception: #{e}")
+      Rails.logger.fatal(trace.indent(2))
+
       render_response(500, message: "Internal Server Error")
     end
 

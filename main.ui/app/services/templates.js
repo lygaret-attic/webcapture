@@ -54,6 +54,10 @@ const templatesFactory = ['http', '$q', '$log', (http, $q, $log) => {
             });
     };
 
+    svc.fragment = (key) => {
+        return http.get(`/api/v1/templates/${key}.frag`);
+    };
+
     svc.upsert = (key, obj = null) => {
         if (typeof(key) === "object" && obj === null) {
             obj = key; key = null;
